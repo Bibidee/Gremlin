@@ -13,6 +13,7 @@ export function Ledger() {
   const { client, address } = useWallet();
   const [balance, setBalance] = useState<number | null>(null);
   const [pleaCount, setPleaCount] = useState<number | null>(null);
+  const [refreshError, setRefreshError] = useState<string | null>(null);
 
   // Seed from localStorage so registration survives page refresh
   const [registered, setRegistered] = useState<boolean>(() => {
@@ -54,8 +55,10 @@ export function Ledger() {
       ]);
       setBalance(bal as number);
       setPleaCount(count as number);
-    } catch {
-      // leave stale values
+      setRefreshError(null);
+    } catch (err) {
+      setRefreshError(err instanceof Error ? err.message : "Failed to load balance");
+      console.error("Ledger refresh failed:", err);
     }
   }, [client, address]);
 
@@ -110,6 +113,7 @@ export function Ledger() {
         <span className="ledger__value">{pleaCount ?? "…"}</span>
       </div>
       {error && <div className="ledger__error">{error}</div>}
+      {refreshError && <div className="ledger__error">{refreshError}</div>}
     </div>
   );
 }
