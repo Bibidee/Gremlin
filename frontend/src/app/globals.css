@@ -838,3 +838,170 @@ body {
     opacity: 1;
   }
 }
+
+/* --- hamburger button -------------------------------------------------- */
+
+.nav__burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem;
+  margin-left: auto;
+}
+
+.nav__burger-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--slime);
+  border-radius: 2px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.nav__drawer {
+  display: none;
+}
+
+/* --- mobile breakpoint -------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .app {
+    padding: 0.75rem;
+  }
+
+  /* nav collapses to brand + burger */
+  .nav {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    position: relative;
+  }
+
+  .nav__links {
+    display: none;
+  }
+
+  .nav__burger {
+    display: flex;
+  }
+
+  /* mobile drawer — full-width strip below the nav bar */
+  .nav__drawer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.25rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(182, 255, 46, 0.15);
+  }
+
+  .nav__drawer-link {
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.65rem 0.75rem;
+    border-radius: 12px;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  .nav__drawer-link:hover,
+  .nav__drawer-link.nav__link--active {
+    color: var(--magenta);
+    background: rgba(255, 63, 176, 0.1);
+  }
+
+  /* hide wallet bar address on very small screens, keep connect button */
+  .wallet-bar__address {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.65rem;
+  }
+
+  /* hero */
+  .hero {
+    padding: 1.5rem 0.5rem 0.5rem;
+  }
+
+  .hero__mascot {
+    font-size: 3.5rem;
+  }
+
+  .hero__title {
+    font-size: clamp(1.8rem, 8vw, 2.8rem);
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn--big {
+    text-align: center;
+  }
+
+  /* arena grid already collapses at 900px, but tighten on mobile */
+  .arena-grid {
+    gap: 1rem;
+  }
+
+  /* feed list — remove fixed height on mobile so it doesn't clip */
+  .feed__list {
+    max-height: none;
+  }
+
+  /* feed item header wraps gracefully */
+  .feed__item-header {
+    flex-wrap: wrap;
+    row-gap: 0.3rem;
+  }
+
+  .feed__item-amount {
+    margin-left: 0;
+  }
+
+  /* leaderboard address truncation */
+  .leaderboard__addr {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 120px;
+  }
+
+  /* consensus trace — stack vertically on mobile */
+  .trace {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .trace__connector {
+    width: 2px;
+    height: 14px;
+    margin: 0 0 0 4px;
+  }
+
+  /* page headings */
+  .page__heading {
+    font-size: 1.8rem;
+  }
+
+  .section-heading {
+    font-size: 1.5rem;
+  }
+
+  /* duel arena full width */
+  .duel-arena {
+    max-width: 100%;
+  }
+
+  /* how-it-works grid single column */
+  .how-it-works__grid {
+    grid-template-columns: 1fr;
+  }
+}
