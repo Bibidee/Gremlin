@@ -458,7 +458,12 @@ def _duel_to_dict(d: "Duel") -> dict:
     }
 
 
-def _parse_gremlin_json(response: str) -> typing.Optional[dict]:
+def _parse_gremlin_json(response: typing.Union[str, dict]) -> typing.Optional[dict]:
+    # gl.nondet.exec_prompt(..., response_format="json") already returns a parsed
+    # dict, not raw text. Handle both shapes defensively in case that changes.
+    if isinstance(response, dict):
+        return response
+
     text = response.strip()
     if text.startswith("```"):
         text = text.strip("`")
