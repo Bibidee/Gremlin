@@ -12,7 +12,7 @@ export function Ledger() {
   const [registered, setRegistered] = useState<boolean | null>(null);
   const { write, status, error } = useContractWrite();
 
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async (isInitial = false) => {
     if (!address) return;
     try {
       const [bal, count, isReg] = await Promise.all([
@@ -24,13 +24,14 @@ export function Ledger() {
       setPleaCount(count as number);
       setRegistered(isReg as boolean);
     } catch {
-      // RPC failed — assume not registered so the button is always reachable
-      setRegistered(false);
+      // On first load, default to showing the Register button.
+      // On subsequent refreshes, leave the current registered state untouched.
+      if (isInitial) setRegistered(false);
     }
   }, [client, address]);
 
   useEffect(() => {
-    refresh();
+    refresh(true);
   }, [refresh]);
 
   useEffect(() => {
