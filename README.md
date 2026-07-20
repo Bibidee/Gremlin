@@ -4,7 +4,7 @@
 
 Gremlin is a GenLayer Intelligent Contract dApp. There is no database, no backend, no admin key. Every balance move — blessing, heist, curse, roast tax, or duel — goes through an LLM jury that reaches on-chain consensus before a single GREM changes hands.
 
-[Live app → gremlin.vercel.app](https://gremlin.vercel.app)
+[Live app → gremlin-five.vercel.app](https://gremlin-five.vercel.app)
 
 ---
 
