@@ -55,7 +55,19 @@ export function useContractWrite() {
         return receipt;
       } catch (err) {
         setStatus("failed");
-        setError(err instanceof Error ? err.message : "Transaction failed");
+        let msg = "Transaction failed";
+        if (err instanceof Error) {
+          msg = err.message;
+        } else if (err && typeof err === "object") {
+          const e = err as Record<string, unknown>;
+          // GenLayer surfaces contract UserErrors as { message } or nested { error: { message } }
+          if (typeof e.message === "string") msg = e.message;
+          else if (e.error && typeof (e.error as Record<string, unknown>).message === "string")
+            msg = (e.error as Record<string, unknown>).message as string;
+        } else if (typeof err === "string") {
+          msg = err;
+        }
+        setError(msg);
         return null;
       }
     },
