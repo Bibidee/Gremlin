@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useWallet } from "@/lib/WalletContext";
 import { useContractWrite } from "@/lib/useContractWrite";
 import { ConsensusTrace } from "./ConsensusTrace";
-import { ACTIONS, CONTRACT_ADDRESS, MAX_MESSAGE_LEN, SELF_TARGET_FORBIDDEN, type ActionValue } from "@/lib/config";
+import { ACTIONS, MAX_MESSAGE_LEN, SELF_TARGET_FORBIDDEN, type ActionValue } from "@/lib/config";
 import type { Plea } from "@/lib/types";
 
 function isPlea(v: unknown): v is Plea {
@@ -18,44 +18,17 @@ function isPlea(v: unknown): v is Plea {
 }
 
 export function PleadForm({ onResolved }: { onResolved: () => void }) {
-  const { address, client } = useWallet();
+  const { address } = useWallet();
   const [action, setAction] = useState<ActionValue>("bless");
   const [target, setTarget] = useState("");
   const [message, setMessage] = useState("");
-  const [registered, setRegistered] = useState<boolean | null>(null);
-
   const { write, status, result, error, reset } = useContractWrite();
-  const { write: writeRegister, status: regStatus, error: regError } = useContractWrite();
-
-  const checkRegistration = useCallback(async () => {
-    if (!address) { setRegistered(null); return; }
-    try {
-      const r = await client.readContract({
-        address: CONTRACT_ADDRESS,
-        functionName: "is_registered",
-        args: [address],
-      });
-      setRegistered(r as boolean);
-    } catch {
-      setRegistered(null);
-    }
-  }, [address, client]);
-
-  useEffect(() => {
-    checkRegistration();
-  }, [checkRegistration]);
-
-  const register = async () => {
-    await writeRegister("register", []);
-    setRegistered(true);
-  };
 
   const selfTargetBlocked =
     SELF_TARGET_FORBIDDEN.includes(action) && target.toLowerCase() === address?.toLowerCase();
 
   const canSubmit =
     !!address &&
-    registered === true &&
     target.trim().length > 0 &&
     message.trim().length > 0 &&
     message.length <= MAX_MESSAGE_LEN &&
@@ -71,26 +44,6 @@ export function PleadForm({ onResolved }: { onResolved: () => void }) {
   };
 
   const verdictResult = isPlea(result) ? result : null;
-
-  if (address && registered === false) {
-    return (
-      <div className="plead-form">
-        <h2>Plead your case</h2>
-        <p className="plead-form__register-hint">
-          You need to register before you can plead. Registration grants you 100 GREM to start.
-        </p>
-        <button
-          className="btn btn--primary"
-          onClick={register}
-          disabled={regStatus === "submitted" || regStatus === "pending"}
-        >
-          {regStatus === "submitted" || regStatus === "pending" ? "Registering…" : "Register (get 100 GREM)"}
-        </button>
-        {regError && <p className="plead-form__warning">{regError}</p>}
-        <ConsensusTrace status={regStatus} error={regError} />
-      </div>
-    );
-  }
 
   return (
     <form className="plead-form" onSubmit={submit}>

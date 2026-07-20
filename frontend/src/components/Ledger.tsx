@@ -14,14 +14,19 @@ export function Ledger() {
 
   const refresh = useCallback(async () => {
     if (!address) return;
-    const [bal, count, isReg] = await Promise.all([
-      client.readContract({ address: CONTRACT_ADDRESS, functionName: "get_balance", args: [address] }),
-      client.readContract({ address: CONTRACT_ADDRESS, functionName: "get_plea_count", args: [address] }),
-      client.readContract({ address: CONTRACT_ADDRESS, functionName: "is_registered", args: [address] }),
-    ]);
-    setBalance(bal as number);
-    setPleaCount(count as number);
-    setRegistered(isReg as boolean);
+    try {
+      const [bal, count, isReg] = await Promise.all([
+        client.readContract({ address: CONTRACT_ADDRESS, functionName: "get_balance", args: [address] }),
+        client.readContract({ address: CONTRACT_ADDRESS, functionName: "get_plea_count", args: [address] }),
+        client.readContract({ address: CONTRACT_ADDRESS, functionName: "is_registered", args: [address] }),
+      ]);
+      setBalance(bal as number);
+      setPleaCount(count as number);
+      setRegistered(isReg as boolean);
+    } catch {
+      // RPC failed — assume not registered so the button is always reachable
+      setRegistered(false);
+    }
   }, [client, address]);
 
   useEffect(() => {
@@ -38,25 +43,37 @@ export function Ledger() {
     return <div className="ledger ledger--empty">Connect your wallet to see your ledger.</div>;
   }
 
+  // Show register button if not confirmed registered (null = unknown, false = definitely not)
+  if (registered !== true) {
+    return (
+      <div className="ledger">
+        <h2>Your Ledger</h2>
+        <p style={{ color: "var(--muted)", fontSize: "0.85rem", marginBottom: "1rem" }}>
+          Register to claim your starting 100 GREM.
+        </p>
+        <button
+          className="btn btn--primary"
+          onClick={() => write("register", [])}
+          disabled={status === "submitted" || status === "pending"}
+        >
+          {status === "submitted" || status === "pending" ? "Registering…" : "Register (get 100 GREM)"}
+        </button>
+        {error && <div className="ledger__error">{error}</div>}
+      </div>
+    );
+  }
+
   return (
     <div className="ledger">
       <h2>Your Ledger</h2>
-      {registered === false ? (
-        <button className="btn btn--primary" onClick={() => write("register", [])} disabled={status === "submitted" || status === "pending"}>
-          {status === "submitted" || status === "pending" ? "Registering…" : "Register (get 100 GREM)"}
-        </button>
-      ) : (
-        <>
-          <div className="ledger__stat">
-            <span className="ledger__label">Balance</span>
-            <span className="ledger__value">{balance ?? "…"} GREM</span>
-          </div>
-          <div className="ledger__stat">
-            <span className="ledger__label">Pleas made</span>
-            <span className="ledger__value">{pleaCount ?? "…"}</span>
-          </div>
-        </>
-      )}
+      <div className="ledger__stat">
+        <span className="ledger__label">Balance</span>
+        <span className="ledger__value">{balance ?? "…"} GREM</span>
+      </div>
+      <div className="ledger__stat">
+        <span className="ledger__label">Pleas made</span>
+        <span className="ledger__value">{pleaCount ?? "…"}</span>
+      </div>
       {error && <div className="ledger__error">{error}</div>}
     </div>
   );
