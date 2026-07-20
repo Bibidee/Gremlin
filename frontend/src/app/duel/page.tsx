@@ -1,7 +1,7 @@
 import { DuelArena } from "@/components/DuelArena";
 
 export const metadata = {
-  title: "Duel Mode — Gremlin",
+  title: "Duel Mode | Gremlin",
 };
 
 export default function DuelPage() {

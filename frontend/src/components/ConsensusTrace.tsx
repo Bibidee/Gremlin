@@ -26,7 +26,7 @@ export function ConsensusTrace({ status, error }: { status: TxUiStatus; error: s
     return (
       <div className="trace trace--warn">
         <span className="trace__icon">◌</span>
-        Validators could not reach consensus. The Gremlin got confused — try rephrasing.
+        Validators could not reach consensus. The Gremlin got confused. Try rephrasing.
       </div>
     );
   }

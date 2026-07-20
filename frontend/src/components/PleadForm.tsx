@@ -86,7 +86,7 @@ export function PleadForm({ onResolved }: { onResolved: () => void }) {
         <div className={`verdict verdict--${verdictResult.verdict}`}>
           <p className="verdict__roast">"{verdictResult.roast}"</p>
           <p className="verdict__outcome">
-            {verdictResult.verdict.toUpperCase()} — {verdictResult.amount} GREM
+            {verdictResult.verdict.toUpperCase()} · {verdictResult.amount} GREM
           </p>
           <button type="button" className="btn" onClick={() => { reset(); setMessage(""); }}>
             Plead again

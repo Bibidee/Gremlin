@@ -163,7 +163,7 @@ export function DuelArena() {
                 <>
                   <p className="feed__item-message">"{d.opponent_message}"</p>
                   <p className="feed__item-roast">
-                    Gremlin: "{d.roast}" — {d.verdict === "draw" ? "Draw" : `${shortAddress(d.winner)} wins`}
+                    Gremlin: "{d.roast}" · {d.verdict === "draw" ? "Draw" : `${shortAddress(d.winner)} wins`}
                   </p>
                 </>
               )}

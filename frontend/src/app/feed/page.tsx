@@ -1,7 +1,7 @@
 import { Feed } from "@/components/Feed";
 
 export const metadata = {
-  title: "The Feed — Gremlin",
+  title: "The Feed | Gremlin",
 };
 
 export default function FeedPage() {

@@ -1,7 +1,7 @@
 import { HallOfFame } from "@/components/HallOfFame";
 
 export const metadata = {
-  title: "Hall of Fame — Gremlin",
+  title: "Hall of Fame | Gremlin",
 };
 
 export default function HallOfFamePage() {

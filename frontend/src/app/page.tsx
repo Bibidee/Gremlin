@@ -9,7 +9,7 @@ export default function LandingPage() {
         <h1 className="display hero__title">Talk the Gremlin into it.</h1>
         <p className="hero__pitch">
           A shared token ledger where the only way to move GREM is to convince a mischievous AI banker
-          your plea deserves it. Bless, gift, steal, curse, or roast-tax — the Gremlin judges every case,
+          your plea deserves it. Bless, gift, steal, curse, or roast-tax. The Gremlin judges every case,
           live, on GenLayer.
         </p>
         <div className="hero__actions">
@@ -40,12 +40,12 @@ export default function LandingPage() {
           <div className="how-card">
             <span className="how-card__num">02</span>
             <h3>Plead your case</h3>
-            <p>Pick an action — bless, gift, steal, curse, roast_tax — and write a plea in 280 characters.</p>
+            <p>Pick an action (bless, gift, steal, curse, roast_tax) and write a plea in 280 characters.</p>
           </div>
           <div className="how-card">
             <span className="how-card__num">03</span>
             <h3>The Gremlin judges</h3>
-            <p>An AI validator persona reads it and hands down grant, partial, or deny — with a roast.</p>
+            <p>An AI validator persona reads it and hands down grant, partial, or deny. With a roast.</p>
           </div>
           <div className="how-card">
             <span className="how-card__num">04</span>

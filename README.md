@@ -2,7 +2,7 @@
 
 **A shared token ledger where the only way to move money is to talk a mischievous AI banker into it.**
 
-Gremlin is a GenLayer Intelligent Contract dApp. There is no database, no backend, no admin key. Every balance move — blessing, heist, curse, roast tax, or duel — goes through an LLM jury that reaches on-chain consensus before a single GREM changes hands.
+Gremlin is a GenLayer Intelligent Contract dApp. There is no database, no backend, no admin key. Every balance move - blessing, heist, curse, roast tax, or duel - goes through an LLM jury that reaches on-chain consensus before a single GREM changes hands.
 
 [Live app → the-gremlin.vercel.app](https://the-gremlin.vercel.app)
 
@@ -10,16 +10,16 @@ Gremlin is a GenLayer Intelligent Contract dApp. There is no database, no backen
 
 ## What it is
 
-You start with 100 GREM. From there, the only way to gain or lose is to plead your case to the Gremlin — an AI persona baked into the contract that reads your message, judges your intent, and returns a verdict. Every validator in the GenLayer network independently runs that same AI judgment. They must agree on the verdict shape before the result is written to state.
+You start with 100 GREM. From there, the only way to gain or lose is to plead your case to the Gremlin - an AI persona baked into the contract that reads your message, judges your intent, and returns a verdict. Every validator in the GenLayer network independently runs that same AI judgment. They must agree on the verdict shape before the result is written to state.
 
 No human arbiter. No off-chain oracle. The Gremlin is the only judge, and the Gremlin lives on-chain.
 
-- **Plea system** — submit a `bless`, `gift`, `steal`, `curse`, or `roast_tax` plea with a free-text message; the AI decides if you deserve it
-- **Duel mode** — challenge another address; both sides write their lines; the Gremlin picks a winner and moves GREM between them
-- **Leaderboard** — three live tables: richest holders, biggest heisters, most-cursed addresses
-- **Hall of Fame** — the all-time biggest single verdicts ever handed down
-- **Consensus trace** — watch the transaction move through GenLayer's pipeline in real time: Plea received → Gremlin invoked → Validators judging → Consensus reached → Balance settled
-- **No off-chain state** — every plea, duel, balance, and roast lives in the contract
+- **Plea system** - submit a `bless`, `gift`, `steal`, `curse`, or `roast_tax` plea with a free-text message; the AI decides if you deserve it
+- **Duel mode** - challenge another address; both sides write their lines; the Gremlin picks a winner and moves GREM between them
+- **Leaderboard** - three live tables: richest holders, biggest heisters, most-cursed addresses
+- **Hall of Fame** - the all-time biggest single verdicts ever handed down
+- **Consensus trace** - watch the transaction move through GenLayer's pipeline in real time: Plea received → Gremlin invoked → Validators judging → Consensus reached → Balance settled
+- **No off-chain state** - every plea, duel, balance, and roast lives in the contract
 
 ---
 
@@ -32,20 +32,20 @@ No human arbiter. No off-chain oracle. The Gremlin is the only judge, and the Gr
 3. Pick an action, enter a target address, and write your best plea
 4. GenLayer validators each independently invoke the Gremlin persona with your message
 5. They reach AI consensus on verdict (`grant` / `partial` / `deny`), roast text, and GREM amount
-6. The verdict is written to contract state — balances update atomically
+6. The verdict is written to contract state - balances update atomically
 
 **Entering a duel**
 
 1. Challenge any registered address with an opening line and a GREM stake
 2. The opponent accepts (adding their own line) or declines
 3. On acceptance, the Gremlin reads both sides and picks a winner
-4. GREM flows from the loser to the winner — capped by contract code regardless of what the AI proposes
+4. GREM flows from the loser to the winner - capped by contract code regardless of what the AI proposes
 
 ---
 
 ## The Gremlin's verdict
 
-The contract uses `gl.vm.run_nondet_unsafe` to call the LLM, then validates the response with a custom validator function before any consensus write. The validator checks JSON shape — never `strict_eq` on LLM text — so validators can reach consensus even when the AI words its roast differently each time.
+The contract uses `gl.vm.run_nondet_unsafe` to call the LLM, then validates the response with a custom validator function before any consensus write. The validator checks JSON shape - never `strict_eq` on LLM text - so validators can reach consensus even when the AI words its roast differently each time.
 
 ```
 plea → LLM prompt (Gremlin persona) → JSON response
@@ -57,7 +57,7 @@ leader raises gl.vm.UserError on unparsable output → validators disagree → l
 consensus achieved → balances update
 ```
 
-The contract hard-caps every amount at `MAX_ACTION_AMOUNT = 50 GREM` in contract code — the LLM can never exceed this regardless of what it decides.
+The contract hard-caps every amount at `MAX_ACTION_AMOUNT = 50 GREM` in contract code - the LLM can never exceed this regardless of what it decides.
 
 ---
 
@@ -69,9 +69,9 @@ The contract hard-caps every amount at `MAX_ACTION_AMOUNT = 50 GREM` in contract
 | Per-plea cap | 50 GREM maximum regardless of AI verdict |
 | Message limit | 280 characters |
 | Self-target guard | `steal`, `curse`, `roast_tax` cannot target your own address |
-| Balance floor | Debits are always clamped to the target's actual balance — balances never go negative |
-| Error handling | `gl.vm.UserError` on unparsable LLM output — validators rotate leader rather than agree on garbage |
-| Duel verdicts | `challenger` / `opponent` / `draw` — each validated for shape by every validator |
+| Balance floor | Debits are always clamped to the target's actual balance - balances never go negative |
+| Error handling | `gl.vm.UserError` on unparsable LLM output - validators rotate leader rather than agree on garbage |
+| Duel verdicts | `challenger` / `opponent` / `draw` - each validated for shape by every validator |
 
 ---
 
@@ -107,12 +107,12 @@ The contract hard-caps every amount at `MAX_ACTION_AMOUNT = 50 GREM` in contract
 
 | Layer | Tech |
 | --- | --- |
-| Intelligent contract | GenLayer Python — `gl.vm.run_nondet_unsafe`, custom validator functions, `gl.vm.UserError` |
+| Intelligent contract | GenLayer Python - `gl.vm.run_nondet_unsafe`, custom validator functions, `gl.vm.UserError` |
 | Frontend | Next.js 14 App Router · TypeScript |
 | Web3 | `genlayer-js` 1.1.8 · Viem |
-| Wallet | Injected only — MetaMask or Rabby via EIP-6963 discovery |
+| Wallet | Injected only - MetaMask or Rabby via EIP-6963 discovery |
 | Chain switching | `wallet_switchEthereumChain` / `wallet_addEthereumChain` (no MetaMask Snap dependency) |
-| Storage | None — all state on-chain |
+| Storage | None - all state on-chain |
 
 ---
 
@@ -120,9 +120,9 @@ The contract hard-caps every amount at `MAX_ACTION_AMOUNT = 50 GREM` in contract
 
 | Route | What's there |
 | --- | --- |
-| `/` | Lair — hero, pitch, rules, how-it-works, live feed teaser |
-| `/arena` | Play screen — ledger sidebar, plea form, live consensus trace, full plea feed |
-| `/duel` | Duel mode — challenge form, open duels, recent results |
+| `/` | Lair - hero, pitch, rules, how-it-works, live feed teaser |
+| `/arena` | Play screen - ledger sidebar, plea form, live consensus trace, full plea feed |
+| `/duel` | Duel mode - challenge form, open duels, recent results |
 | `/leaderboard` | Three tabs: Richest / Biggest Heisters / Most Roasted |
 | `/hall-of-fame` | Top 12 biggest single verdicts of all time |
 | `/feed` | Full plea history feed |
@@ -133,7 +133,7 @@ The contract hard-caps every amount at `MAX_ACTION_AMOUNT = 50 GREM` in contract
 
 ```
 contracts/
-  gremlin_bank.py           GenLayer Intelligent Contract — all on-chain logic
+  gremlin_bank.py           GenLayer Intelligent Contract - all on-chain logic
 
 frontend/
   src/app/                  Next.js App Router pages
@@ -169,7 +169,7 @@ tests/
 ## Getting started
 
 ```bash
-# Contract (optional — already deployed)
+# Contract (optional - already deployed)
 pip install -r requirements.txt
 genvm-lint check contracts/gremlin_bank.py --json
 pytest tests/direct/ -v
@@ -184,7 +184,7 @@ npm run dev
 
 Open http://localhost:3000.
 
-Wallet connection is injected only. The app uses EIP-6963 provider discovery to find MetaMask or Rabby without fighting over `window.ethereum`. It switches to StudioNet via `wallet_switchEthereumChain` — deliberately avoiding `client.connect()` which internally calls a MetaMask-only Snap API (`wallet_getSnaps`) that errors on Rabby.
+Wallet connection is injected only. The app uses EIP-6963 provider discovery to find MetaMask or Rabby without fighting over `window.ethereum`. It switches to StudioNet via `wallet_switchEthereumChain` - deliberately avoiding `client.connect()` which internally calls a MetaMask-only Snap API (`wallet_getSnaps`) that errors on Rabby.
 
 ---
 

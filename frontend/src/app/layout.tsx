@@ -5,7 +5,7 @@ import { Nav } from "@/components/Nav";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Gremlin — GREM Bank",
+  title: "Gremlin: GREM Bank",
   description:
     "A shared token ledger where the only way to move money is to talk a mischievous AI banker into it. Built on GenLayer.",
 };

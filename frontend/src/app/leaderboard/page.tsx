@@ -1,7 +1,7 @@
 import { Leaderboard } from "@/components/Leaderboard";
 
 export const metadata = {
-  title: "Leaderboard — Gremlin",
+  title: "Leaderboard | Gremlin",
 };
 
 export default function LeaderboardPage() {
