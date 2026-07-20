@@ -5,6 +5,7 @@ import { useWallet } from "@/lib/WalletContext";
 import { useContractWrite } from "@/lib/useContractWrite";
 import { ConsensusTrace } from "./ConsensusTrace";
 import { ACTIONS, MAX_MESSAGE_LEN, SELF_TARGET_FORBIDDEN, type ActionValue } from "@/lib/config";
+import { toCalldataAddress } from "@/lib/format";
 import type { Plea } from "@/lib/types";
 
 function isPlea(v: unknown): v is Plea {
@@ -39,7 +40,7 @@ export function PleadForm({ onResolved }: { onResolved: () => void }) {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSubmit) return;
-    await write("plead", [action, target, message]);
+    await write("plead", [action, toCalldataAddress(target), message]);
     onResolved();
   };
 

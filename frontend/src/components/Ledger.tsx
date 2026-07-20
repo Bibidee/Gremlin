@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useWallet } from "@/lib/WalletContext";
 import { CONTRACT_ADDRESS } from "@/lib/config";
 import { useContractWrite } from "@/lib/useContractWrite";
+import { toCalldataAddress } from "@/lib/format";
 
 function regKey(address: string) {
   return `gremlin_registered_${address.toLowerCase()}`;
@@ -38,7 +39,7 @@ export function Ledger() {
     }
     // Not in cache — ask the contract
     client
-      .readContract({ address: CONTRACT_ADDRESS, functionName: "is_registered", args: [address] })
+      .readContract({ address: CONTRACT_ADDRESS, functionName: "is_registered", args: [toCalldataAddress(address)] })
       .then((r) => {
         if (r) markRegistered(address);
         else setRegistered(false);
@@ -49,9 +50,10 @@ export function Ledger() {
   const refresh = useCallback(async () => {
     if (!address) return;
     try {
+      const addrArg = toCalldataAddress(address);
       const [bal, count] = await Promise.all([
-        client.readContract({ address: CONTRACT_ADDRESS, functionName: "get_balance", args: [address] }),
-        client.readContract({ address: CONTRACT_ADDRESS, functionName: "get_plea_count", args: [address] }),
+        client.readContract({ address: CONTRACT_ADDRESS, functionName: "get_balance", args: [addrArg] }),
+        client.readContract({ address: CONTRACT_ADDRESS, functionName: "get_plea_count", args: [addrArg] }),
       ]);
       setBalance(bal as number);
       setPleaCount(count as number);

@@ -5,7 +5,7 @@ import { useWallet } from "@/lib/WalletContext";
 import { useContractWrite } from "@/lib/useContractWrite";
 import { ConsensusTrace } from "./ConsensusTrace";
 import { CONTRACT_ADDRESS, MAX_MESSAGE_LEN } from "@/lib/config";
-import { shortAddress } from "@/lib/format";
+import { shortAddress, toCalldataAddress } from "@/lib/format";
 import type { Duel } from "@/lib/types";
 
 export function DuelArena() {
@@ -23,7 +23,7 @@ export function DuelArena() {
   const refresh = useCallback(async () => {
     if (!address) return;
     const [open, recent] = await Promise.all([
-      client.readContract({ address: CONTRACT_ADDRESS, functionName: "get_open_duels_for", args: [address] }),
+      client.readContract({ address: CONTRACT_ADDRESS, functionName: "get_open_duels_for", args: [toCalldataAddress(address)] }),
       client.readContract({ address: CONTRACT_ADDRESS, functionName: "get_recent_duels", args: [15] }),
     ]);
     setOpenDuels((open as unknown as Duel[]) ?? []);
@@ -55,7 +55,7 @@ export function DuelArena() {
   const sendChallenge = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canChallenge) return;
-    await challenge.write("challenge_duel", [opponent, challengeMessage]);
+    await challenge.write("challenge_duel", [toCalldataAddress(opponent), challengeMessage]);
     setChallengeMessage("");
   };
 
