@@ -98,7 +98,7 @@ The contract hard-caps every amount at `MAX_ACTION_AMOUNT = 50 GREM` in contract
 | Chain ID | 61999 |
 | RPC | https://studio.genlayer.com/api |
 | Explorer | https://explorer-studio.genlayer.com |
-| Contract | `0x87b93b1C838e11B0C278a75954e2FB0e2F9b6fd7` |
+| Contract | `0x1e0B7737b08C1913794C1B6eEb5ef70D6Ec01c85` |
 | Source | `contracts/gremlin_bank.py` |
 
 ---
