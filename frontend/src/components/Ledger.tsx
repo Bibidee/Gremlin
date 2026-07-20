@@ -43,6 +43,14 @@ export function Ledger() {
     return <div className="ledger ledger--empty">Connect your wallet to see your ledger.</div>;
   }
 
+  const handleRegister = async () => {
+    const receipt = await write("register", []);
+    if (receipt) {
+      setRegistered(true);
+      refresh();
+    }
+  };
+
   // Show register button if not confirmed registered (null = unknown, false = definitely not)
   if (registered !== true) {
     return (
@@ -53,7 +61,7 @@ export function Ledger() {
         </p>
         <button
           className="btn btn--primary"
-          onClick={() => write("register", [])}
+          onClick={handleRegister}
           disabled={status === "submitted" || status === "pending"}
         >
           {status === "submitted" || status === "pending" ? "Registering…" : "Register (get 100 GREM)"}
