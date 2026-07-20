@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useWallet } from "@/lib/WalletContext";
 import { Ledger } from "@/components/Ledger";
 import { PleadForm } from "@/components/PleadForm";
 import { Feed } from "@/components/Feed";
 import { CONTRACT_ADDRESS } from "@/lib/config";
 
 export default function ArenaPage() {
-  const { address } = useWallet();
   const [refreshKey, setRefreshKey] = useState(0);
   const unconfigured = CONTRACT_ADDRESS === "0x0000000000000000000000000000000000000000";
 
