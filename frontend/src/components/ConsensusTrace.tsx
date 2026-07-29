@@ -4,8 +4,7 @@ const STEPS: { statuses: TxUiStatus[]; label: string }[] = [
   { statuses: ["submitted"], label: "Plea received" },
   { statuses: ["pending", "proposing"], label: "Gremlin invoked" },
   { statuses: ["committing", "revealing"], label: "Validators judging" },
-  { statuses: ["accepted"], label: "Consensus reached" },
-  { statuses: ["finalized"], label: "Balance settled" },
+  { statuses: ["accepted", "finalized"], label: "Balance settled" },
 ];
 
 const TERMINAL_ORDER: TxUiStatus[] = ["submitted", "pending", "proposing", "committing", "revealing", "accepted", "finalized"];
@@ -41,13 +40,18 @@ export function ConsensusTrace({ status, error }: { status: TxUiStatus; error: s
   }
 
   const reachedIndex = TERMINAL_ORDER.indexOf(status);
+  const isTerminal = status === "accepted" || status === "finalized";
 
   return (
     <div className="trace">
       {STEPS.map((step, i) => {
+        const isLast = i === STEPS.length - 1;
         const stepMaxIndex = Math.max(...step.statuses.map((s) => TERMINAL_ORDER.indexOf(s)));
-        const done = reachedIndex > stepMaxIndex;
-        const active = step.statuses.includes(status);
+        // The final step resolves straight to "done" the moment we hit accepted/finalized -
+        // useContractWrite resolves at ACCEPTED and never separately signals FINALIZED, so
+        // there's no real "in progress" window to show as active for this step.
+        const done = isLast ? isTerminal : reachedIndex > stepMaxIndex;
+        const active = isLast ? false : step.statuses.includes(status);
         return (
           <div key={step.label} className={`trace__step ${active ? "trace__step--active" : ""} ${done ? "trace__step--done" : ""}`}>
             <span className="trace__dot" />
