@@ -10,7 +10,7 @@ function regKey(address: string) {
   return `gremlin_registered_${address.toLowerCase()}`;
 }
 
-export function Ledger() {
+export function Ledger({ refreshKey = 0 }: { refreshKey?: number } = {}) {
   const { client, address } = useWallet();
   const [balance, setBalance] = useState<number | null>(null);
   const [pleaCount, setPleaCount] = useState<number | null>(null);
@@ -67,6 +67,11 @@ export function Ledger() {
   useEffect(() => {
     if (registered) refresh();
   }, [registered, refresh]);
+
+  // Re-fetch whenever a plea/duel elsewhere on the page resolves
+  useEffect(() => {
+    if (registered && refreshKey > 0) refresh();
+  }, [refreshKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (status === "finalized" || status === "accepted") refresh();

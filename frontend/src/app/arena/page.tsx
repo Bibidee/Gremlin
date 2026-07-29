@@ -19,7 +19,7 @@ export default function ArenaPage() {
       )}
       <div className="arena-grid">
         <aside className="arena-grid__sidebar">
-          <Ledger />
+          <Ledger refreshKey={refreshKey} />
         </aside>
         <section className="arena-grid__center">
           <PleadForm onResolved={() => setRefreshKey((k) => k + 1)} />
