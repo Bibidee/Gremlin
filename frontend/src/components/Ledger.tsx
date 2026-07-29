@@ -10,7 +10,7 @@ function regKey(address: string) {
   return `gremlin_registered_${address.toLowerCase()}`;
 }
 
-export function Ledger({ refreshKey = 0 }: { refreshKey?: number } = {}) {
+export function Ledger({ pleaResult }: { pleaResult?: { nonce: number; delta: number } | null } = {}) {
   const { client, address } = useWallet();
   const [balance, setBalance] = useState<number | null>(null);
   const [pleaCount, setPleaCount] = useState<number | null>(null);
@@ -68,10 +68,16 @@ export function Ledger({ refreshKey = 0 }: { refreshKey?: number } = {}) {
     if (registered) refresh();
   }, [registered, refresh]);
 
-  // Re-fetch whenever a plea/duel elsewhere on the page resolves
+  // Whenever a plea elsewhere on the page resolves: apply the known balance
+  // change immediately (RPC reads can lag a moment behind a just-accepted
+  // write), then reconcile with the chain a few seconds later.
   useEffect(() => {
-    if (registered && refreshKey > 0) refresh();
-  }, [refreshKey]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!pleaResult || !registered) return;
+    setBalance((b) => (b === null ? b : b + pleaResult.delta));
+    setPleaCount((c) => (c === null ? c : c + 1));
+    const t = setTimeout(() => refresh(), 3000);
+    return () => clearTimeout(t);
+  }, [pleaResult?.nonce]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (status === "finalized" || status === "accepted") refresh();

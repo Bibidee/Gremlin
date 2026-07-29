@@ -8,7 +8,13 @@ import { CONTRACT_ADDRESS } from "@/lib/config";
 
 export default function ArenaPage() {
   const [refreshKey, setRefreshKey] = useState(0);
+  const [pleaResult, setPleaResult] = useState<{ nonce: number; delta: number } | null>(null);
   const unconfigured = CONTRACT_ADDRESS === "0x0000000000000000000000000000000000000000";
+
+  const handleResolved = (delta: number) => {
+    setRefreshKey((k) => k + 1);
+    setPleaResult({ nonce: Date.now(), delta });
+  };
 
   return (
     <main className="page page--arena">
@@ -19,10 +25,10 @@ export default function ArenaPage() {
       )}
       <div className="arena-grid">
         <aside className="arena-grid__sidebar">
-          <Ledger refreshKey={refreshKey} />
+          <Ledger pleaResult={pleaResult} />
         </aside>
         <section className="arena-grid__center">
-          <PleadForm onResolved={() => setRefreshKey((k) => k + 1)} />
+          <PleadForm onResolved={handleResolved} />
         </section>
         <section className="arena-grid__feed">
           <Feed refreshKey={refreshKey} limit={20} />

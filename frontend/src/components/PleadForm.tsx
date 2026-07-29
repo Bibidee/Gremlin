@@ -18,7 +18,16 @@ function isPlea(v: unknown): v is Plea {
   );
 }
 
-export function PleadForm({ onResolved }: { onResolved: () => void }) {
+/** How the caller's own balance changes for a given action, using the amount
+ * the contract actually settled on (already clamped for verdict/partial/deny).
+ * bless/curse/roast_tax only move GREM into/out of the target, never the caller. */
+function callerBalanceDelta(action: ActionValue, plea: Plea): number {
+  if (action === "gift") return -plea.amount;
+  if (action === "steal") return plea.amount;
+  return 0;
+}
+
+export function PleadForm({ onResolved }: { onResolved: (balanceDelta: number) => void }) {
   const { address } = useWallet();
   const [action, setAction] = useState<ActionValue>("bless");
   const [target, setTarget] = useState("");
@@ -40,8 +49,10 @@ export function PleadForm({ onResolved }: { onResolved: () => void }) {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSubmit) return;
-    await write("plead", [action, toCalldataAddress(target), message]);
-    onResolved();
+    const receipt = await write("plead", [action, toCalldataAddress(target), message]);
+    const settled = (receipt as { result?: unknown })?.result ?? receipt;
+    const delta = isPlea(settled) ? callerBalanceDelta(action, settled) : 0;
+    onResolved(delta);
   };
 
   const verdictResult = isPlea(result) ? result : null;
